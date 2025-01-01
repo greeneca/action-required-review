@@ -11,6 +11,7 @@ This is an alpha version! The changes listed here are not final.
 
 ### Changed
 - Update docs with permissions for GitHub Apps and fine-grained access tokens.
+- Updated package dependencies.
 
 ### Fixed
 - Avoid trying to request reviews from bot accounts.
