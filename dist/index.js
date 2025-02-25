@@ -36840,6 +36840,7 @@ module.exports = requestReviewer;
 
 const assert = __nccwpck_require__( 9491 );
 const core = __nccwpck_require__( 5504 );
+const github = __nccwpck_require__( 6864 );
 const { SError } = __nccwpck_require__( 3954 );
 const picomatch = __nccwpck_require__( 8542 );
 const fetchTeamMembers = __nccwpck_require__( 1605 );
@@ -36892,9 +36893,11 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 	const op = keys[ 0 ];
 	let arg = teamConfig[ op ];
 
+	// Shared validation.
 	switch ( op ) {
 		case 'any-of':
 		case 'all-of':
+		case 'is-author-or-reviewer':
 			// These ops require an array of teams/objects.
 			if ( ! Array.isArray( arg ) ) {
 				throw new RequirementError( `Expected an array of teams, got ${ typeof arg }`, {
@@ -36902,7 +36905,7 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 					value: arg,
 				} );
 			}
-			if ( ! arg.length === 0 ) {
+			if ( arg.length === 0 ) {
 				throw new RequirementError( 'Expected a non-empty array of teams', {
 					config: config,
 					value: teamConfig,
@@ -36910,14 +36913,9 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 			}
 			arg = arg.map( t => buildReviewerFilter( config, t, `${ indent }  ` ) );
 			break;
-
-		default:
-			throw new RequirementError( `Unrecognized operation "${ op }"`, {
-				config: config,
-				value: teamConfig,
-			} );
 	}
 
+	// Process operations.
 	if ( op === 'any-of' ) {
 		return async function ( reviewers ) {
 			core.info( `${ indent }Union of these:` );
@@ -36966,7 +36964,35 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 		};
 	}
 
-	// WTF?
+	if ( op === 'is-author-or-reviewer' ) {
+		return async function ( reviewers ) {
+			core.info( `${ indent }Author or reviewers are union of these:` );
+			const authorOrReviewers = [ ...reviewers, github.context.payload.pull_request.user.login ];
+			const reviewersAny = await Promise.all(
+				arg.map( f => f( authorOrReviewers, `${ indent }  ` ) )
+			);
+			const requirementsMet = [];
+			const neededTeams = [];
+			for ( const requirementResult of reviewersAny ) {
+				if ( requirementResult.teamReviewers.length !== 0 ) {
+					requirementsMet.push( requirementResult.teamReviewers );
+				}
+				if ( requirementResult.neededTeams.length !== 0 ) {
+					neededTeams.push( requirementResult.neededTeams );
+				}
+			}
+			if ( requirementsMet.length > 0 ) {
+				// If there are requirements met, zero out the needed teams
+				neededTeams.length = 0;
+			}
+			return printSet(
+				`${ indent }=>`,
+				[ ...new Set( requirementsMet.flat( 1 ) ) ],
+				[ ...new Set( neededTeams.flat( 1 ) ) ]
+			);
+		};
+	}
+
 	throw new RequirementError( `Unrecognized operation "${ op }"`, {
 		config: config,
 		value: teamConfig,
@@ -37079,7 +37105,7 @@ class Requirement {
 	 * Test whether this requirement is satisfied.
 	 *
 	 * @param {string[]} reviewers - Reviewers to test against.
-	 * @return {boolean} Whether the requirement is satisfied.
+	 * @return {string[]} Array of teams from which review is still needed.
 	 */
 	async needsReviewsFrom( reviewers ) {
 		core.info( 'Checking reviewers...' );
