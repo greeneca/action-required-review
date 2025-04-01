@@ -2070,9 +2070,9 @@ exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context 
 const Context = __importStar(__nccwpck_require__(7798));
 const Utils = __importStar(__nccwpck_require__(916));
 // octokit + plugins
-const core_1 = __nccwpck_require__(8426);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(2418);
-const plugin_paginate_rest_1 = __nccwpck_require__(6840);
+const core_1 = __nccwpck_require__(9270);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6940);
+const plugin_paginate_rest_1 = __nccwpck_require__(3755);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
 exports.defaults = {
@@ -3533,7 +3533,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 
 /***/ }),
 
-/***/ 8426:
+/***/ 9270:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -3557,11 +3557,11 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // pkg/dist-src/index.js
-var dist_src_exports = {};
-__export(dist_src_exports, {
+var index_exports = {};
+__export(index_exports, {
   Octokit: () => Octokit
 });
-module.exports = __toCommonJS(dist_src_exports);
+module.exports = __toCommonJS(index_exports);
 var import_universal_user_agent = __nccwpck_require__(7125);
 var import_before_after_hook = __nccwpck_require__(6223);
 var import_request = __nccwpck_require__(2518);
@@ -3569,7 +3569,7 @@ var import_graphql = __nccwpck_require__(6859);
 var import_auth_token = __nccwpck_require__(8953);
 
 // pkg/dist-src/version.js
-var VERSION = "5.2.0";
+var VERSION = "5.2.1";
 
 // pkg/dist-src/index.js
 var noop = () => {
@@ -4243,7 +4243,7 @@ function withCustomRequest(customRequest) {
 
 /***/ }),
 
-/***/ 6840:
+/***/ 3755:
 /***/ ((module) => {
 
 "use strict";
@@ -4644,7 +4644,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 2418:
+/***/ 6940:
 /***/ ((module) => {
 
 "use strict";
