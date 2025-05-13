@@ -1850,7 +1850,7 @@ class ExecState extends events.EventEmitter {
 
 /***/ }),
 
-/***/ 7798:
+/***/ 6775:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -1882,6 +1882,7 @@ class Context {
         this.action = process.env.GITHUB_ACTION;
         this.actor = process.env.GITHUB_ACTOR;
         this.job = process.env.GITHUB_JOB;
+        this.runAttempt = parseInt(process.env.GITHUB_RUN_ATTEMPT, 10);
         this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10);
         this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
         this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : `https://api.github.com`;
@@ -1912,7 +1913,7 @@ exports.Context = Context;
 
 /***/ }),
 
-/***/ 6864:
+/***/ 6585:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1942,8 +1943,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOctokit = exports.context = void 0;
-const Context = __importStar(__nccwpck_require__(7798));
-const utils_1 = __nccwpck_require__(5295);
+const Context = __importStar(__nccwpck_require__(6775));
+const utils_1 = __nccwpck_require__(3777);
 exports.context = new Context.Context();
 /**
  * Returns a hydrated octokit ready to use for GitHub Actions
@@ -1960,7 +1961,7 @@ exports.getOctokit = getOctokit;
 
 /***/ }),
 
-/***/ 916:
+/***/ 9456:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2037,7 +2038,7 @@ exports.getApiBaseUrl = getApiBaseUrl;
 
 /***/ }),
 
-/***/ 5295:
+/***/ 3777:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -2067,8 +2068,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context = void 0;
-const Context = __importStar(__nccwpck_require__(7798));
-const Utils = __importStar(__nccwpck_require__(916));
+const Context = __importStar(__nccwpck_require__(6775));
+const Utils = __importStar(__nccwpck_require__(9456));
 // octokit + plugins
 const core_1 = __nccwpck_require__(9270);
 const plugin_rest_endpoint_methods_1 = __nccwpck_require__(6940);
@@ -36672,7 +36673,7 @@ function wrappy (fn, cb) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 const { WError } = __nccwpck_require__( 3954 );
 
 /**
@@ -36721,7 +36722,7 @@ module.exports = fetchPaths;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 const { WError } = __nccwpck_require__( 3954 );
 
 const STATE_ERROR = 'error';
@@ -36784,7 +36785,7 @@ module.exports["default"] = module.exports;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 
 /**
  * Request review from the given team
@@ -36839,7 +36840,7 @@ module.exports = requestReviewer;
 
 const assert = __nccwpck_require__( 9491 );
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 const { SError } = __nccwpck_require__( 3954 );
 const picomatch = __nccwpck_require__( 8542 );
 const fetchTeamMembers = __nccwpck_require__( 1605 );
@@ -37122,7 +37123,7 @@ module.exports = Requirement;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 const { WError } = __nccwpck_require__( 3954 );
 
 /**
@@ -37174,7 +37175,7 @@ module.exports = fetchReviewers;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__( 5504 );
-const github = __nccwpck_require__( 6864 );
+const github = __nccwpck_require__( 6585 );
 const { WError } = __nccwpck_require__( 3954 );
 
 const cache = {};
