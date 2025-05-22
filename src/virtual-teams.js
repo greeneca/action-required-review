@@ -5,7 +5,7 @@ const github = require( '@actions/github' );
 const virtualTeams = {};
 
 async function addVirtualTeams(members, team) {
-    if ( ! virtualTeams ) {
+    if ( ! (team in virtualTeams )) {
         const teamsFilename = core.getInput( 'virtual-teams-file' );
         let virtualTeamsString = "";
         if ( ! teamsFilename ) {
@@ -47,7 +47,7 @@ async function addVirtualTeams(members, team) {
             }
         }
     }
-    core.info( `All virtual teams ${ virtualTeams }` );
+    core.info( `All virtual teams ${ virtualTeams.keys() }` );
     core.info( `Adding virtual team ${ team }` );
     core.info( `Members: ${ virtualTeams[team] }` );
     for ( const member of virtualTeams[team] ) {
