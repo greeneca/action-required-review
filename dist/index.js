@@ -37297,6 +37297,8 @@ async function addVirtualTeams(members, team) {
             }
         }
     }
+    core.info( `Adding virtual team ${ team }` );
+    core.info( `Members: ${ virtualTeams[team] }` );
     for ( const member of virtualTeams[team] ) {
         try {
             const res = await octokit.rest.users.getByUsername( { username: member } );
