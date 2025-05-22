@@ -1,6 +1,7 @@
 
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
+const reporter = require( './reporter.js' );
 
 const virtualTeams = {};
 
