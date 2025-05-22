@@ -37297,6 +37297,7 @@ async function addVirtualTeams(members, team) {
             }
         }
     }
+    core.info( `All virtual teams ${ virtualTeams }` );
     core.info( `Adding virtual team ${ team }` );
     core.info( `Members: ${ virtualTeams[team] }` );
     for ( const member of virtualTeams[team] ) {
