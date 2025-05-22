@@ -1,6 +1,7 @@
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
 const { WError } = require( 'error' );
+const addVirtualTeams = require( './virtual-teams.js' );
 
 const cache = {};
 
@@ -14,8 +15,7 @@ const cache = {};
 async function fetchTeamMembers( team ) {
 	if ( cache[ team ] ) {
 		return cache[ team ];
-	}
-
+    }
 	const octokit = github.getOctokit( core.getInput( 'token', { required: true } ) );
 	const org = github.context.payload.repository.owner.login;
 
@@ -34,6 +34,10 @@ async function fetchTeamMembers( team ) {
 				{}
 			);
 		}
+	} else if ( team.startsWith( '+' ) ) {
+        // Handle #virtual teams. Fetch the correct usernames case from GitHub
+        // to avoid having to worry about edge cases and Unicode versions and such.
+        await addVirtualTeams( members, team );
 	} else {
 		try {
 			for await ( const res of octokit.paginate.iterator( octokit.rest.teams.listMembersInOrg, {

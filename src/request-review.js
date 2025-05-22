@@ -1,5 +1,6 @@
 const core = require( '@actions/core' );
 const github = require( '@actions/github' );
+const addVirtualTeams = require( './virtual-teams.js' );
 
 /**
  * Request review from the given team
@@ -25,6 +26,8 @@ async function requestReviewer( teams ) {
 			core.info( `Skipping ${ t }, appears to be a bot` );
 		} else if ( t.startsWith( '@' ) ) {
 			userReviews.push( t.slice( 1 ) );
+		} else if ( t.startsWith( '+' ) ) {
+            await addVirtualTeams( userReviews, t );
 		} else {
 			teamReviews.push( t );
 		}
