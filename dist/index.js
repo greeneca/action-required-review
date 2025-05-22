@@ -37270,7 +37270,7 @@ async function addVirtualTeams(members, team) {
             virtualTeamsString = fs.readFileSync( teamsFilename, 'utf8' );
         } catch ( error ) {
             throw new reporter.ReportError(
-                `Virtual teams file ${ filename } could not be read`,
+                `Virtual teams file ${ teamsFilename } could not be read`,
                 error,
                 {}
             );
