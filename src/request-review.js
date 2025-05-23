@@ -18,7 +18,7 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
-	const userReviews = [];
+	let userReviews = [];
 	const teamReviews = [];
 
 	for ( const t of teams ) {
@@ -32,6 +32,11 @@ async function requestReviewer( teams ) {
 			teamReviews.push( t );
 		}
 	}
+
+    if ( userReviews.includes( author ) ) {
+        core.info( `Skipping review for author ${ author }` );
+        userReviews = userReviews.filter( user => user !== author );
+    }
 
 	try {
 		await octokit.rest.pulls.requestReviewers( {
