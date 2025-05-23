@@ -3,6 +3,7 @@ const core = require( '@actions/core' );
 const github = require( '@actions/github' );
 const reporter = require( './reporter.js' );
 const fs = require( 'fs' );
+const yaml = require( 'js-yaml' );
 
 const virtualTeams = {};
 
