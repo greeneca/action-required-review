@@ -31,7 +31,7 @@ async function addVirtualTeams(members, team) {
             virtualTeamsArray = yaml.load( virtualTeamsString, {
                 onWarning: w => core.warning( `Yaml: ${ w.message }` ),
             } );
-            if ( ! Array.isArray( virtualTeams ) ) {
+            if ( ! Array.isArray( virtualTeamsArray ) ) {
                 throw new Error( 'Virtual teams file does not contain an array' );
             }
         } catch ( error ) {
