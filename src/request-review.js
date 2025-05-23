@@ -32,7 +32,9 @@ async function requestReviewer( teams ) {
 			teamReviews.push( t );
 		}
 	}
-
+    core.info( `Author: ${ author }` );
+    core.info( `User Reviews: ${ userReviews }` )
+    core.info( `Team Reviews: ${ teamReviews }` )
     if ( userReviews.includes( author ) ) {
         core.info( `Skipping review for author ${ author }` );
         userReviews = userReviews.filter( user => user !== author );
