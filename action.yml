@@ -14,6 +14,12 @@ inputs:
       Requirements file.
       Either this or `requirements` is required.
     required: false
+  virtual-teams-file:
+    description: >
+      Virtual teams file.
+      This file contains a mapping of team names to GitHub usernames.
+      If a team is not found, the action will fail.
+    required: false
   status:
     description: Status context for the status check.
     required: false
