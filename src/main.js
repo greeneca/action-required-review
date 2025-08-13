@@ -93,10 +93,11 @@ const Requirement = require( './requirement.js' );
             if ( teamsNeededForReview.size === 0 ) {
                 await reporter.status( reporter.STATE_SUCCESS, 'All required reviews have been provided!' );
             } else {
-                message = "Awating: "
+                message = "Awating reviews from: "
                 teamsNeededForReview.forEach ( team => {
                     message += team + ", "
                 })
+                core.info( message );
                 await reporter.status(
                     core.getBooleanInput( 'fail' ) ? reporter.STATE_FAILURE : reporter.STATE_PENDING,
                     message
