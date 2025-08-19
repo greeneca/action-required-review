@@ -37133,13 +37133,14 @@ class Requirement {
                         }
                         return ret;
                     }
+                } else {
+                    throw new RequirementError(
+                        'Labels must be a non-empty array of strings.',
+                        {
+                            config: config,
+                        }
+                    );
                 }
-                throw new RequirementError(
-                    'Labels must be a non-empty array of strings.',
-                    {
-                        config: config,
-                    }
-                );
             }
         }
 
