@@ -36693,10 +36693,10 @@ async function fetchLabels() {
             repo: repo,
             pull_number: pr,
         });
-        return data.labels.map((label) => label.name);
+        return pull.data.labels.map((label) => label.name);
     } catch ( error ) {
         throw new WError(
-            `Failed to query ${ owner }/${ repo } PR #${ pr } files from GitHub`,
+            `Failed to query ${ owner }/${ repo } PR #${ pr } from GitHub`,
             error,
             {}
         );
