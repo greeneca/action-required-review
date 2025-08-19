@@ -37101,6 +37101,9 @@ class Requirement {
 			);
 		}
         if ( config.labels !== undefined ) {
+            core.error( `is Array ${Array.isArray( config.labels )}` )
+            core.error( `length ${config.labels.length}` )
+            core.error( `every ${config.labels.every( label => typeof label === 'string' )}` )
 
             this.labelsFilter = v => {
                 if (
@@ -37131,11 +37134,8 @@ class Requirement {
                         return ret;
                     }
                 }
-                if ( typeof config.labels === 'string' ) {
-                    return picomatch( config.labels, { dot: true } )( v );
-                }
                 throw new RequirementError(
-                    'Labels must be a non-empty array of strings, or a string.',
+                    'Labels must be a non-empty array of strings.',
                     {
                         config: config,
                     }
