@@ -37101,9 +37101,6 @@ class Requirement {
 			);
 		}
         if ( config.labels !== undefined ) {
-            core.error( `is Array ${Array.isArray( config.labels )}` )
-            core.error( `length ${config.labels.length}` )
-            core.error( `every ${config.labels.every( label => typeof label === 'string' )}` )
 
             this.labelsFilter = v => {
                 if (
@@ -37112,23 +37109,14 @@ class Requirement {
                     config.labels.every( label => typeof label === 'string' )
                 ) {
                     const filters = config.labels.map( label => {
-                        if ( label.startsWith( '!' ) ) {
-                            return {
-                                negated: true,
-                                filter: picomatch( label.substring( 1 ), { dot: true, nonegate: true } ),
-                            };
-                        }
-                        return {
-                            negated: false,
-                            filter: picomatch( label, { dot: true } ),
-                        };
+                          picomatch( label, { dot: true } )
                     } );
                     const first = filters.shift();
                     this.labelsFilter = v => {
-                        let ret = first.filter( v ) ? ! first.negated : first.negated;
+                        let ret = first( v ) ? true : false;
                         for ( const filter of filters ) {
-                            if ( filter.filter( v ) ) {
-                                ret = ! filter.negated;
+                            if ( filter( v ) ) {
+                                ret = true;
                             }
                         }
                         return ret;
@@ -37136,6 +37124,37 @@ class Requirement {
                 } else {
                     throw new RequirementError(
                         'Labels must be a non-empty array of strings.',
+                        {
+                            config: config,
+                        }
+                    );
+                }
+            }
+        }
+        if ( config.notLabels !== undefined ) {
+
+            this.notLabelsFilter = v => {
+                if (
+                    Array.isArray( config.notLabels ) &&
+                    config.notLabels.length > 0 &&
+                    config.notLabels.every( label => typeof label === 'string' )
+                ) {
+                    const filters = config.notLabels.map( label => {
+                          picomatch( label, { dot: true } )
+                    } );
+                    const first = filters.shift();
+                    this.notLabelsFilter = v => {
+                        let ret = first( v ) ? true : false;
+                        for ( const filter of filters ) {
+                            if ( filter( v ) ) {
+                                ret = true;
+                            }
+                        }
+                        return ret;
+                    }
+                } else {
+                    throw new RequirementError(
+                        'notLabels must be a non-empty array of strings.',
                         {
                             config: config,
                         }
@@ -37177,9 +37196,24 @@ class Requirement {
                     paths,
                 };
             }
-
             core.info( 'Matches the following labels:' );
             matches.forEach( m => core.info( `   - ${ m }` ) );
+
+            if (this.notLabelsFilter) {
+                matches = matches.filter( l => ! this.notLabelsFilter( l ) );
+            } else {
+                matches = [];
+            }
+            if ( matches.length > 0 ) {
+                core.info( 'Matches the following negated labels:' );
+                matches.forEach( m => core.info( `   - ${ m }` ) );
+                return {
+                    applies: false,
+                    matchedPaths,
+                    paths,
+                };
+            }
+            core.info( 'Matches no negated labels.' );
         }
         return this.appliesToPaths( paths, matchedPaths );
     }
