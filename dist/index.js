@@ -36703,7 +36703,7 @@ async function fetchLabels() {
     }
 }
 
-module.exports = fetchlabels;
+module.exports = fetchLabels;
 
 
 /***/ }),
