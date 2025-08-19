@@ -214,10 +214,88 @@ class Requirement {
 				}
 			);
 		}
+        if ( config.labels !== undefined ) {
+
+            this.labelsFilter = v => {
+                if (
+                    Array.isArray( config.labels ) &&
+                    config.labels.length > 0 &&
+                    config.labels.every( label => typeof label === 'string' )
+                ) {
+                    const filters = config.labels.map( label => {
+                        if ( label.startsWith( '!' ) ) {
+                            return {
+                                negated: true,
+                                filter: picomatch( label.substring( 1 ), { dot: true, nonegate: true } ),
+                            };
+                        }
+                        return {
+                            negated: false,
+                            filter: picomatch( label, { dot: true } ),
+                        };
+                    } );
+                    const first = filters.shift();
+                    this.labelsFilter = v => {
+                        let ret = first.filter( v ) ? ! first.negated : first.negated;
+                        for ( const filter of filters ) {
+                            if ( filter.filter( v ) ) {
+                                ret = ! filter.negated;
+                            }
+                        }
+                        return ret;
+                    }
+                }
+                if ( typeof config.labels === 'string' ) {
+                    return picomatch( config.labels, { dot: true } )( v );
+                }
+                throw new RequirementError(
+                    'Labels must be a non-empty array of strings, or a string.',
+                    {
+                        config: config,
+                    }
+                );
+            }
+        }
 
 		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
 		this.consume = !! config.consume;
 	}
+
+	// eslint-disable-next-line jsdoc/require-returns, jsdoc/require-returns-check -- Doesn't support documentation of object structure.
+	/**
+	 * Test whether this requirement applies to the passed paths and labels.
+	 *
+	 * @param {string[]} paths        - Paths to test against.
+	 * @param {string[]} matchedPaths - Paths that have already been matched.
+	 * @param {string[]} labels       - Labels to test against.
+	 * @return {object} _ Results object.
+	 * @return {boolean} _.applies Whether the requirement applies.
+	 * @return {string[]} _.matchedPaths New value for `matchedPaths`.
+	 * @return {string[]} _.paths New value for `paths`.
+	 */
+    applies( paths, matchedPaths, labels ) {
+        if (this.labelsFilter) {
+            let matches;
+            if ( this.labelsFilter ) {
+                matches = labels.filter( l => this.labelsFilter( l ) );
+            } else {
+                matches = labels;
+            }
+
+            if ( matches.length === 0 ) {
+                core.info( `Doesn't match any labels.` );
+                return {
+                    applies: false,
+                    matchedPaths,
+                    paths,
+                };
+            }
+
+            core.info( 'Matches the following labels:' );
+            matches.forEach( m => core.info( `   - ${ m }` ) );
+        }
+        return this.appliesToPaths( paths, matchedPaths );
+    }
 
 	// eslint-disable-next-line jsdoc/require-returns, jsdoc/require-returns-check -- Doesn't support documentation of object structure.
 	/**

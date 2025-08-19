@@ -65,6 +65,7 @@ const Requirement = require( './requirement.js' );
             core.endGroup();
 
             let paths = await require( './paths.js' )();
+            let labels = await require( './labels.js' )();
             core.startGroup( `PR affects ${ paths.length } file(s)` );
             paths.forEach( p => core.info( p ) );
             core.endGroup();
@@ -75,7 +76,7 @@ const Requirement = require( './requirement.js' );
                 const r = requirements[ i ];
                 core.startGroup( `Checking requirement "${ r.name }"...` );
                 let applies;
-                ( { applies, matchedPaths, paths } = r.appliesToPaths( paths, matchedPaths ) );
+                ( { applies, matchedPaths, paths } = r.applies( paths, matchedPaths, labels ) );
                 if ( ! applies ) {
                     core.endGroup();
                     core.info( `Requirement "${ r.name }" does not apply to any files in this PR.` );
