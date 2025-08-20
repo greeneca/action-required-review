@@ -37208,7 +37208,7 @@ class Requirement {
         if (this.notLabelsFilter) {
             let matches;
             if (this.notLabelsFilter) {
-                matches = matches.filter( l => ! this.notLabelsFilter( l ) );
+                matches = labels.filter( l => ! this.notLabelsFilter( l ) );
             } else {
                 matches = [];
             }
