@@ -37180,7 +37180,7 @@ class Requirement {
 	 * @return {string[]} _.paths New value for `paths`.
 	 */
     applies( paths, matchedPaths, labels ) {
-        let applies = appliesToLabels( labels );
+        let applies = this.appliesToLabels( labels );
         if ( ! applies ) {
             core.info( `Requirement "${ this.name }" doesn't apply to labels.` );
             return { applies: false, matchedPaths, paths };
