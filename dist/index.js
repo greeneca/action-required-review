@@ -37140,7 +37140,7 @@ class Requirement {
                     config.notLabels.every( label => typeof label === 'string' )
                 ) {
                     const filters = config.notLabels.map( label => {
-                          picomatch( label, { dot: true } )
+                          return picomatch( label, { dot: true } )
                     } );
                     const first = filters.shift();
                     this.notLabelsFilter = v => {
