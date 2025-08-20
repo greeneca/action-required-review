@@ -37260,7 +37260,9 @@ class Requirement {
 				core.info( 'Consuming matched files!' );
 				ret.paths = ret.paths.filter( p => ! matches.includes( p ) );
 			}
-		}
+        } else {
+            core.info( 'Does not apply to any files.' )
+        }
 
 		return ret;
 	}
@@ -39482,7 +39484,7 @@ const Requirement = __nccwpck_require__( 2720 );
                 ( { applies, matchedPaths, paths } = r.applies( paths, matchedPaths, labels ) );
                 if ( ! applies ) {
                     core.endGroup();
-                    core.info( `Requirement "${ r.name }" does not apply to any files in this PR.` );
+                    core.info( `Requirement "${ r.name }" does not apply to this PR.` );
                 } else {
                     const neededForRequirement = await r.needsReviewsFrom( reviewers );
                     core.endGroup();

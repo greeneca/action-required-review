@@ -374,7 +374,9 @@ class Requirement {
 				core.info( 'Consuming matched files!' );
 				ret.paths = ret.paths.filter( p => ! matches.includes( p ) );
 			}
-		}
+        } else {
+            core.info( 'Does not apply to any files.' )
+        }
 
 		return ret;
 	}
