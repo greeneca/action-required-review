@@ -223,7 +223,7 @@ class Requirement {
                     config.labels.every( label => typeof label === 'string' )
                 ) {
                     const filters = config.labels.map( label => {
-                          picomatch( label, { dot: true } )
+                          return picomatch( label, { dot: true } )
                     } );
                     const first = filters.shift();
                     this.labelsFilter = v => {
@@ -268,7 +268,7 @@ class Requirement {
                     }
                 } else {
                     throw new RequirementError(
-                        'notLabels must be a non-empty array of strings.',
+                        'Labels must be a non-empty array of strings.',
                         {
                             config: config,
                         }
