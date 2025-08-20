@@ -37180,6 +37180,15 @@ class Requirement {
 	 * @return {string[]} _.paths New value for `paths`.
 	 */
     applies( paths, matchedPaths, labels ) {
+        let applies = appliesToLabels( labels );
+        if ( ! applies ) {
+            core.info( `Requirement "${ this.name }" doesn't apply to labels.` );
+            return { applies: false, matchedPaths, paths };
+        }
+        return this.appliesToPaths( paths, matchedPaths );
+    }
+
+    appliesToLabels( labels) {
         if (this.labelsFilter) {
             let matches;
             if ( this.labelsFilter ) {
@@ -37190,15 +37199,14 @@ class Requirement {
 
             if ( matches.length === 0 ) {
                 core.info( `Doesn't match any labels.` );
-                return {
-                    applies: false,
-                    matchedPaths,
-                    paths,
-                };
+                return false;
             }
             core.info( 'Matches the following labels:' );
             matches.forEach( m => core.info( `   - ${ m }` ) );
 
+        }
+        if (this.notLabelsFilter) {
+            let matches;
             if (this.notLabelsFilter) {
                 matches = matches.filter( l => ! this.notLabelsFilter( l ) );
             } else {
@@ -37207,16 +37215,13 @@ class Requirement {
             if ( matches.length > 0 ) {
                 core.info( 'Matches the following negated labels:' );
                 matches.forEach( m => core.info( `   - ${ m }` ) );
-                return {
-                    applies: false,
-                    matchedPaths,
-                    paths,
-                };
+                return false;
             }
             core.info( 'Matches no negated labels.' );
         }
-        return this.appliesToPaths( paths, matchedPaths );
+        return true;
     }
+
 
 	// eslint-disable-next-line jsdoc/require-returns, jsdoc/require-returns-check -- Doesn't support documentation of object structure.
 	/**
