@@ -38,6 +38,7 @@ async function requestReviewer( teams ) {
         userReviews = userReviews.filter( user => user !== author.slice(1) );
     }
 
+    core.info( `Skipping review from existing reviewers: ${ existingReviewers }` );
     userReviews = userReviews.filter( user => ! existingReviewers.includes( user ) );
 
 	try {
