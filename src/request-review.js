@@ -18,11 +18,11 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
-    const existingReviewers = await octokit.rest.pulls.reviewers.get({
+    const existingReviewers = await octokit.rest.pulls.reviews.get({
         owner: owner,
         repo: repo,
         pull_number: pr,
-    }).then( res => res.data.reviewers.map( user => user.login ) );
+    }).then( res => res.data.reviews.map( review => user.login ) );
 	let userReviews = [];
 	const teamReviews = [];
 
