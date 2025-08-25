@@ -36843,7 +36843,7 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
-    const existingReviewers = await octokit.rest.pulls.listReviewers({
+    const existingReviewers = await octokit.rest.pulls.listReviews({
         owner: owner,
         repo: repo,
         pull_number: pr,
