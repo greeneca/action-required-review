@@ -36878,6 +36878,8 @@ async function requestReviewer( teams ) {
 			team_reviewers: teamReviews,
 		} );
 		core.info( `Requested review(s) from ${ teams }` );
+        core.info( `userReviewers: ${ userReviews }` );
+        core.info( `teamReviewers: ${ teamReviews }` );
 	} catch ( err ) {
 		throw new Error( `Unable to request review.\n  Error: ${ err }` );
 	}
