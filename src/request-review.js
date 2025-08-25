@@ -18,6 +18,7 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
+    const existingReviewers = await require( './reviews.js' )();
 	let userReviews = [];
 	const teamReviews = [];
 
@@ -32,10 +33,12 @@ async function requestReviewer( teams ) {
 			teamReviews.push( t );
 		}
 	}
-    if ( userReviews.includes( author.slice(1) ) ) {
-        core.info( `Skipping review for author ${ author.slice(1) }` );
-        userReviews = userReviews.filter( user => user !== author.slice(1) );
-    }
+    //if ( userReviews.includes( author.slice(1) ) ) {
+    //    core.info( `Skipping review for author ${ author.slice(1) }` );
+    //    userReviews = userReviews.filter( user => user !== author.slice(1) );
+    //}
+
+    userReviews = userReviews.filter( user => ! existingReviewers.includes( user ) );
 
 	try {
 		await octokit.rest.pulls.requestReviewers( {
