@@ -22,7 +22,7 @@ async function requestReviewer( teams ) {
         owner: owner,
         repo: repo,
         pull_number: pr,
-    }).then(res => res.data.forEach(review => core.info(`Existing review: ${ Object.keys(review.user) }`)));
+    }).then(res => res.data.map(review => review.user.login));
 	let userReviews = [];
 	const teamReviews = [];
 
