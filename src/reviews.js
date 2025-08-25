@@ -15,12 +15,12 @@ async function fetchReviews() {
 
 	const reviewers = {};
 	try {
-		res = await octokit.rest.pulls.reviews, {
+		res = await octokit.rest.pulls.listReviews({
 			owner: owner,
 			repo: repo,
 			pull_number: pr,
-		};
-        res.forEach( review => {
+		});
+        res.data.forEach( review => {
             reviewers[ review.login ] = true;
         } );
 	} catch ( error ) {
