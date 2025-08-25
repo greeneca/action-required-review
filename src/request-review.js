@@ -18,7 +18,11 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
-    const existingReviewers = await require( './reviews.js' )();
+    const existingReviewers = await github.rest.pulls.reviewers.list({
+        owner: owner,
+        repo: repo,
+        pull_number: pr,
+    }).then( res => res.data.users.map( user => user.login ) );
 	let userReviews = [];
 	const teamReviews = [];
 

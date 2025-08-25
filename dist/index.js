@@ -36843,7 +36843,11 @@ async function requestReviewer( teams ) {
 		teams = teams.filter( team => team !== author );
 	}
 
-    const existingReviewers = await __nccwpck_require__( 2267 )();
+    const existingReviewers = await github.rest.pulls.reviewers.list({
+        owner: owner,
+        repo: repo,
+        pull_number: pr,
+    }).then( res => res.data.users.map( user => user.login ) );
 	let userReviews = [];
 	const teamReviews = [];
 
@@ -37336,50 +37340,6 @@ async function fetchReviewers() {
 }
 
 module.exports = fetchReviewers;
-
-
-/***/ }),
-
-/***/ 2267:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const core = __nccwpck_require__( 2186 );
-const github = __nccwpck_require__( 5438 );
-const { WError } = __nccwpck_require__( 8345 );
-
-/**
- * Fetch the reviews in the current PR.
- *
- * @return {string[]} Paths.
- */
-async function fetchReviews() {
-	const octokit = github.getOctokit( core.getInput( 'token', { required: true } ) );
-	const owner = github.context.payload.repository.owner.login;
-	const repo = github.context.payload.repository.name;
-	const pr = github.context.payload.pull_request.number;
-
-	const reviewers = {};
-	try {
-		res = await octokit.rest.pulls.reviews, {
-			owner: owner,
-			repo: repo,
-			pull_number: pr,
-		};
-        res.forEach( review => {
-            reviewers[ review.login ] = true;
-        } );
-	} catch ( error ) {
-		throw new WError(
-			`Failed to query ${ owner }/${ repo } PR #${ pr } reviews from GitHub`,
-			error,
-			{}
-		);
-	}
-
-	return Object.keys( reviewers ).sort();
-}
-
-module.exports = fetchReviews;
 
 
 /***/ }),
