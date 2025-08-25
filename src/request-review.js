@@ -37,10 +37,10 @@ async function requestReviewer( teams ) {
 			teamReviews.push( t );
 		}
 	}
-    //if ( userReviews.includes( author.slice(1) ) ) {
-    //    core.info( `Skipping review for author ${ author.slice(1) }` );
-    //    userReviews = userReviews.filter( user => user !== author.slice(1) );
-    //}
+    if ( userReviews.includes( author.slice(1) ) ) {
+        core.info( `Skipping review for author ${ author.slice(1) }` );
+        userReviews = userReviews.filter( user => user !== author.slice(1) );
+    }
 
     userReviews = userReviews.filter( user => ! existingReviewers.includes( user ) );
 
